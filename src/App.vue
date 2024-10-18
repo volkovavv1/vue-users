@@ -1,17 +1,41 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <main>
+    <div v-if="loading" class="loading">Loading...</div>
+
+    <div v-if="error" class="error">{{ error }}</div>
+
+    <h1 class="title">All users</h1>
+    <section v-if="users" class="container">
+      <section class="cards-wrapper">
+        <AllUsers :users="users" />
+      </section>
+    </section>
+  </main>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import AllUsers from './components/AllUsers.vue';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    AllUsers
+  }
+}
+
+const users = ''
+const error = ''
+const loading = ''
+
+export function getUsers() {
+  try {
+    fetch(`${BASE_URL}/users`)
+    .then((response) => response.json())
+    .then((data) => users.value = data)
+  } catch (err) {
+    error.value = err
+  } finally {
+    loading.value = false
   }
 }
 </script>
