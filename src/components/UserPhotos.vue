@@ -28,7 +28,7 @@ export default {
   <div class="wrapper">
     <div class="carousel">
       <div class="photo">
-        <img v-for="(photo, id) in photos" :key="id" src={{ photo.url }} alt={{ photo.url }}>
+        <img v-for="(photo, id) in photos" :key="id" :src=photo.url :alt=photo.title>
       </div>
     </div>
   </div>
