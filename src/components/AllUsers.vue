@@ -1,29 +1,42 @@
 <script>
-import SingleUser from './components/SingleUser.vue';
+import axios from 'axios';
+
+import { BASE_URL } from '@/utils/constants';
+
+import UserPreview from './UserPreview.vue';
 
 export default {
   name: 'AllUsers',
   components: {
-    SingleUser
+    UserPreview,
+  },
+  data () {
+    return {
+      users: []
+    }
+  },
+  mounted() {
+    axios.get(`${BASE_URL}/users`).then(res => this.users = res.data)
   }
 }
-
-const props = defineProps({
-  user: {
-    type: [Object, null],
-    required: true,
-  }
-})
 
 </script>
 
 <template>
   <section class="users-container">
-    <SingleUser v-for="(user, id) in users" :key="id" :user="user"/> 
+    <h1>All users</h1>
+    <UserPreview v-for="(user, id) in users" :key="id" :user="user"/>
   </section>
 </template>
 
 <style scoped>
+h1 {
+  width: fit-content;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 3rem auto;
+}
+
 h3 {
   margin: 40px 0 0;
 }

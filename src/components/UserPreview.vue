@@ -1,35 +1,34 @@
 <script>
-import axios from 'axios';
-
-import { BASE_URL } from '@/utils/constants';
+import { store } from '@/store/store';
 
 export default {
-  name: 'UserPhotos',
-  data () {
-    return {
-      photos: []
-    }
-  },
+  name: 'UserPreview',
   props: {
-    albumId: {
-    type: [Number, null],
+    user: {
+    type: [Object, null],
     required: true,
     },
   },
-  mounted() {
-    axios.get(`${BASE_URL}/albums/${albumId}/photos`).then(res => this.photos = res.photos);
-    this.photos.length = 5;
-  }
+  methods: {
+    setCurrentUser(user) {
+      store.commit('setUser', user);
+
+    }
+  },
 } 
 
 </script>
 
 <template>
-  <div class="wrapper">
-    <div class="carousel">
-      <div class="photo">
-        <img v-for="(photo, id) in photos" :key="id" src={{ photo.url }} alt={{ photo.url }}>
+  <div class="wrapper" v-on:click="setCurrentUser(user)">
+    <div class="user">
+    <div class="credits">
+      <div class="image"></div>
+      <div class="name">
+        <p>{{ user.name }}</p>
+        <span class="username">{{ user.username }}</span>
       </div>
+    </div>
     </div>
   </div>
 </template>

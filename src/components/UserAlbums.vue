@@ -1,40 +1,41 @@
 <script>
 import axios from 'axios';
 
-import { BASE_URL } from '@/utils/constants';
+import UserPhotos from './UserPhotos.vue';
+
+import { store } from '@/store/store';
 
 export default {
-  name: 'UserPhotos',
+  name: 'UserAlbums',
+  components: {
+    UserPhotos,
+  },
   data () {
     return {
-      photos: []
+      albums: []
     }
   },
-  props: {
-    albumId: {
-    type: [Number, null],
-    required: true,
-    },
-  },
   mounted() {
-    axios.get(`${BASE_URL}/albums/${albumId}/photos`).then(res => this.photos = res.photos);
-    this.photos.length = 5;
+    axios.get(`${BASE_URL}/albums`).then(res => {
+      res.data.forEach(album => {
+      album.userId === store.state.currentUser.id ? this.albums.push(album) : ''
+    })
+    })
+    console.log(this.posts)
   }
 } 
-
 </script>
 
 <template>
-  <div class="wrapper">
-    <div class="carousel">
-      <div class="photo">
-        <img v-for="(photo, id) in photos" :key="id" src={{ photo.url }} alt={{ photo.url }}>
-      </div>
+  <section class="wrapper">
+    <div class="album" v-for="(album, id) in albums" :key="id">
+      <p class="title">
+        {{ album.title }}
+      </p>
+    <UserPhotos :albumId="albumId"/>
     </div>
-  </div>
+  </section>
 </template>
-
-
 
 <style lang="scss" scoped>
   .user {
