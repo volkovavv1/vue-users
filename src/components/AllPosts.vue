@@ -11,19 +11,12 @@ export default {
       posts: []
     }
   },
-  // methods: {
-  //   setCurrentUser(user) {
-  //     store.commit('setUser', user);
-  //   }
-  // },
   mounted() {
     axios.get(`${BASE_URL}/posts`).then(res => {
       res.data.forEach(post => {
-      post.userId === store.state.currentUser.id ? this.posts.push(post) : ''
+      post.userId === store.state.currentUserId ? this.posts.push(post) : ''
     });
-    // this.posts.length = 5;
     })
-    console.log(this.posts)
   }
 } 
 

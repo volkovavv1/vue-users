@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import UserPhotos from './UserPhotos.vue';
 
+import { BASE_URL } from '@/utils/constants';
 import { store } from '@/store/store';
 
 export default {
@@ -18,10 +19,9 @@ export default {
   mounted() {
     axios.get(`${BASE_URL}/albums`).then(res => {
       res.data.forEach(album => {
-      album.userId === store.state.currentUser.id ? this.albums.push(album) : ''
+      album.userId === store.state.currentUserId ? this.albums.push(album) : ""
     })
     })
-    console.log(this.posts)
   }
 } 
 </script>
@@ -32,49 +32,31 @@ export default {
       <p class="title">
         {{ album.title }}
       </p>
-    <UserPhotos :albumId="albumId"/>
+    <UserPhotos v-if="id" :albumId="id"/>
     </div>
   </section>
 </template>
 
 <style lang="scss" scoped>
-  .user {
-    width: 35rem;
-    background-color: white;
-
-    margin: 0 auto 2.2rem;
-    padding: 1.2rem;
-
-    border-radius: 30px;
-    box-shadow: 0px 4px 16px 0px rgba(44, 50, 65, 0.08);
-    cursor: pointer;
-  }
-
-  .name {
+  .wrapper {
     display: flex;
     flex-direction: column;
-    font-weight: bold;
-    font-size: 1.5rem;
-    padding-bottom: 0;
-    margin: auto 1rem;
-
+    margin: 0 auto;
+    align-items: center;
   }
 
-  .username {
-    font-weight: 400;
-    font-size: 0.875rem;
-    color: rgb(114, 114, 114);
-    font-style: italic;
-  }
-
-  .credits {
+  .album {
+    width: 40rem;
     display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
-  .image {
-    width: 3.75rem;
-    height: 3.75rem;
-    border-radius: 50%;
-    background-color: aquamarine;
+  .title {
+    font-weight: bold;
+    font-size: 2rem;
+    text-align: center;
+    width: 40rem;
+    padding-bottom: 3rem;
   }
 </style>

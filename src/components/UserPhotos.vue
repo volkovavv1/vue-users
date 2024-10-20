@@ -7,7 +7,11 @@ export default {
   name: 'UserPhotos',
   data () {
     return {
-      photos: []
+      photos: [],
+      cards: [1, 2, 3, 4, 5],
+      innerStyles: {},
+      step: '',
+      transitioning: false
     }
   },
   props: {
@@ -17,63 +21,124 @@ export default {
     },
   },
   mounted() {
-    axios.get(`${BASE_URL}/albums/${albumId}/photos`).then(res => this.photos = res.photos);
-    this.photos.length = 5;
+    axios.get(`${BASE_URL}/albums/${this.albumId}/photos`).then(res => this.photos = res.data);
+    this.setStep()
+    this.resetTranslate()
+  }, 
+  methods: {
+    setStep () {
+      const innerWidth = this.$refs.inner.scrollWidth
+      const totalCards = this.cards.length
+      this.step = `${innerWidth / totalCards}px`
+    },
+
+    next () {
+      if (this.transitioning) return
+
+      this.transitioning = true
+
+      this.moveLeft()
+
+      this.afterTransition(() => {
+        const card = this.cards.shift()
+        this.cards.push(card)
+        this.resetTranslate()
+        this.transitioning = false
+      })
+    },
+
+    prev () {
+      if (this.transitioning) return
+
+      this.transitioning = true
+
+      this.moveRight()
+
+      this.afterTransition(() => {
+        const card = this.cards.pop()
+        this.cards.unshift(card)
+        this.resetTranslate()
+        this.transitioning = false
+      })
+    },
+
+    moveLeft () {
+      this.innerStyles = {
+        transform: `translateX(-${this.step})
+                    translateX(-${this.step})`
+      }
+    },
+
+    moveRight () {
+      this.innerStyles = {
+        transform: `translateX(${this.step})
+                    translateX(-${this.step})`
+      }
+    },
+
+    afterTransition (callback) {
+      const listener = () => {
+        callback()
+        this.$refs.inner.removeEventListener('transitionend', listener)
+      }
+      this.$refs.inner.addEventListener('transitionend', listener)
+    },
+
+    resetTranslate () {
+      this.innerStyles = {
+        transition: 'none',
+        transform: `translateX(-${this.step})`
+      }
+    }
   }
 } 
-
 </script>
 
 <template>
   <div class="wrapper">
     <div class="carousel">
-      <div class="photo">
-        <img v-for="(photo, id) in photos" :key="id" :src=photo.url :alt=photo.title>
+      <div class="inner" ref="inner" :style="innerStyles">
+        <div class="card" v-for="(photo, id) in photos" :key="id" >
+          <img :src=photo.url :alt=photo.title>
+        </div>
       </div>
     </div>
+    <button @click="prev">prev</button>
+    <button @click="next">next</button>
   </div>
 </template>
 
 
-
 <style lang="scss" scoped>
-  .user {
-    width: 35rem;
-    background-color: white;
+  .carousel {
+    width: 170px;
+    overflow: hidden;
+  } 
 
-    margin: 0 auto 2.2rem;
-    padding: 1.2rem;
-
-    border-radius: 30px;
-    box-shadow: 0px 4px 16px 0px rgba(44, 50, 65, 0.08);
-    cursor: pointer;
+  .inner {
+    transition: transform 0.2s;
+    white-space: nowrap;
   }
 
-  .name {
-    display: flex;
-    flex-direction: column;
-    font-weight: bold;
-    font-size: 1.5rem;
-    padding-bottom: 0;
-    margin: auto 1rem;
-
+  .card {
+    width: 40px;
+    margin-right: 10px;
+    display: inline-flex;
+    height: 40px;
+    color: white;
+    border-radius: 4px;
+    align-items: center;
+    justify-content: center;
   }
 
-  .username {
-    font-weight: 400;
-    font-size: 0.875rem;
-    color: rgb(114, 114, 114);
-    font-style: italic;
+  img {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
   }
 
-  .credits {
-    display: flex;
-  }
-
-  .image {
-    width: 3.75rem;
-    height: 3.75rem;
-    border-radius: 50%;
-    background-color: aquamarine;
+  button {
+    margin-right: 5px;
+    margin-top: 10px;
   }
 </style>

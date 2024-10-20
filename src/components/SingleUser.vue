@@ -1,17 +1,43 @@
 <script>
+import axios from 'axios';
+
+import { BASE_URL } from '@/utils/constants';
 import { store } from '@/store/store';
 
 import AllPosts from './AllPosts.vue';
-import UserAlbums from './UserPhotos.vue';
+import UserAlbums from './UserAlbums.vue';
 
 export default {
   name: 'SingleUser',
+  data () {
+    return {
+      user: {}
+    }
+  },
   components: {
     UserAlbums,
     AllPosts,
-  }
+  },
+  mounted() {
+    if (store.state.currentUserId !== null) {
+      axios.get(`${BASE_URL}/users/${store.state.currentUserId}`).then(res => this.user = res.data);
+      localStorage.setItem('currentUser', this.user)
+    } else {
+      this.user = localStorage.getItem('currentUser');
+    }
+  },
+  // updated() {
+  //   axios.get(`${BASE_URL}/users/${store.state.currentUserId}`).then(res => this.user = res.data);
+  // }
+  // methods: {
+  //   getUser (a) {
+  //     return store.state.currentUser[a]
+  //   }
+  // },
+  // computed: {
+  // myValue() { return store.state.currentUser }
+  // },
 } 
-
 </script>
 
 <template>
@@ -20,39 +46,39 @@ export default {
     <div class="credits">
       <div class="image"></div>
       <div class="name">
-        <p>{{ store.state.currentUser.name }}</p>
-        <span class="username">{{ store.state.currentUser.username }}</span>
+        <p>{{ user.name }}</p>
+        <!-- <span class="username">{{ getUser("username") }}</span> -->
       </div>
     </div>
     <div class="contact">
       <ul>
         <li>Contacts</li>
-        <li>{{ store.state.currentUser.email }}</li>
-        <li>{{ store.state.currentUser.phone }}</li>
-        <li>{{ store.state.currentUser.website }}</li>
+        <!-- <li>{{ getUser("email") }}</li>
+        <li>{{ getUser("phone") }}</li>
+        <li>{{ getUser("website") }}</li> -->
       </ul>
 
       <ul>
         <li>Address</li>
-        <li>{{ store.state.currentUser.address.street, store.state.currentUser.address.suite }}</li>
-        <li>{{ store.state.currentUser.address.city, store.state.currentUser.address.zipcode  }}</li>
-        <li>{{ store.state.currentUser.address.geo.lat, store.state.currentUser.address.geo.lng  }}</li>
+        <!-- <li>{{ getUser("address.street")}} </li> -->
+        <!-- <li>{{ getUser("address.city"), getUser("address.zipcode")  }}</li>
+        <li>{{ getUser("address.geo.lat"), getUser("address.geo.lng")  }}</li> -->
       </ul>
     
     <ul> 
       <li>Company</li>
-      <li>{{ store.state.currentUser.company.name }}</li>
-      <li>{{ store.state.currentUser.company.catchPhrase }}</li>
-      <li>{{ store.state.currentUser.company.bs }}</li>
+      <!-- <li>{{ getUser("company.name") }}</li>
+      <li>{{ getUser("company.catchPhrase") }}</li>
+      <li>{{ getUser("company.bs") }}</li> -->
     </ul>
   </div>
     </div>
     <div class="content-wrapper">
-      <h3>{{ store.state.currentUser.name }}'s photos: </h3>
+      <!-- <h3>{{ getUser("name") }}'s photos: </h3> -->
       <div class="content">
         <UserAlbums />
       </div>
-      <h3>{{ store.state.currentUser.name }}'s posts: </h3>
+      <!-- <h3>{{ getUser("name") }}'s posts: </h3> -->
       <div class="content">
         <AllPosts />
       </div>
