@@ -1,30 +1,17 @@
-// import { reactive } from "vue";
-
-// export const store = reactive({
-//   currentUser: {},
-//   setCurrentUser(user) {
-//     this.currentUser = user;
-//   },
-// })
 import { createStore } from 'vuex'
 
 export const store = createStore({
-    state () {
-      return {
-        currentUser: { id: 1},
-          mutations: {
-              setUser(state, user) {
-              state.currentUser = user
-            }
-          }
-        }
-      },
-    mutations: {
-        setUser(state, user) {
-        state.currentUser = user
-      }
+  state () {
+    return {
+      currentUserId: null,
     }
-  })
+    },
+  mutations: {
+    setUserId(state, id) {
+      state.currentUserId = id
+    }
+  }
+})
 //   setPrevPage() {
 //     this.currentPage--
 //   },

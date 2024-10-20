@@ -1,6 +1,8 @@
 <script>
 import { store } from '@/store/store';
 
+import { router } from '@/main';
+
 export default {
   name: 'UserPreview',
   props: {
@@ -10,17 +12,17 @@ export default {
     },
   },
   methods: {
-    setCurrentUser(user) {
-      store.commit('setUser', user);
-
-    }
+    setCurrentUserId: function (id) {
+      store.commit('setUserId', id);
+      router.push('/user');
+    },
   },
 } 
 
 </script>
 
 <template>
-  <div class="wrapper" v-on:click="setCurrentUser(user)">
+  <div class="wrapper" v-on:click="setCurrentUserId(user.id)">
     <div class="user">
     <div class="credits">
       <div class="image"></div>
