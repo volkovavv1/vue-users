@@ -1,7 +1,7 @@
 <script>
 import { store } from '@/store/store';
 
-import { router } from '@/main';
+import { router } from '@/utils/router';
 
 export default {
   name: 'UserPreview',
@@ -25,7 +25,9 @@ export default {
   <div class="wrapper" v-on:click="setCurrentUserId(user.id)">
     <div class="user">
     <div class="credits">
-      <div class="image"></div>
+      <div class="avatar">
+        <p class="id">{{ user.id }}</p>
+      </div>
       <div class="name">
         <p>{{ user.name }}</p>
         <span class="username">{{ user.username }}</span>
@@ -71,10 +73,21 @@ export default {
     display: flex;
   }
 
-  .image {
+  .avatar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     width: 3.75rem;
     height: 3.75rem;
+
     border-radius: 50%;
-    background-color: aquamarine;
+    background-color: rgba(127, 236, 255, 0.699);
+  }
+
+  .id {
+    margin-top: -0.2rem;
+    font-size: 2rem;
+    color: rgb(0, 155, 175);
   }
 </style>

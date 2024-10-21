@@ -12,14 +12,3 @@ export const store = createStore({
     }
   }
 })
-//   setPrevPage() {
-//     this.currentPage--
-//   },
-//   setNextPage() {
-//     this.currentPage++
-//   },
-  
-//   filter: false,
-//   setFilter(param) {
-//     this.filter = param
-//   }

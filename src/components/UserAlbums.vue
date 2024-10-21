@@ -13,26 +13,41 @@ export default {
   },
   data () {
     return {
-      albums: []
+      albums: [],
+      isErr: false,
     }
   },
   mounted() {
-    axios.get(`${BASE_URL}/albums`).then(res => {
-      res.data.forEach(album => {
-      album.userId === store.state.currentUserId ? this.albums.push(album) : ""
-    })
-    })
+    if (localStorage.getItem('currentUserId')) {
+      axios.get(`${BASE_URL}/albums`)
+      .catch((error) => {
+        if (error.response) {
+          this.isErr = true;
+          console.log(error.response.status);
+        }})
+        .then(res => { res.data.forEach(album => {album.userId == Number(localStorage.getItem('currentUserId')) ? this.albums.push(album) : ""})})
+    } else {
+    axios.get(`${BASE_URL}/albums`).catch((error) => {
+        if (error.response) {
+          this.isErr = true;
+          console.log(error.response.status);
+        }})
+      .then(res => {
+        res.data.forEach(album => {album.userId == store.state.currentUserId ? this.albums.push(album) : ""})
+      })
+    }
   }
 } 
 </script>
 
 <template>
   <section class="wrapper">
-    <div class="album" v-for="(album, id) in albums" :key="id">
+    <div v-if="this.isErr" class="error">Sorry, we have an error. Please, try again later!</div>
+    <div class="album" v-for="(album, id) in albums" :key="id" >
       <p class="title">
-        {{ album.title }}
+        Album "{{ album.title }}"
       </p>
-    <UserPhotos v-if="id" :albumId="id"/>
+      <UserPhotos :albumId="Number(album.id)"/>
     </div>
   </section>
 </template>
@@ -53,10 +68,20 @@ export default {
   }
 
   .title {
-    font-weight: bold;
-    font-size: 2rem;
+    font-size: 1.5rem;
     text-align: center;
     width: 40rem;
     padding-bottom: 3rem;
+  }
+
+  @media screen and (max-width: 600px) {
+    .title {
+      width: 20rem;
+    }
+
+    .carousel {
+      width: 25rem;
+      height: 14rem;
+    }
   }
 </style>

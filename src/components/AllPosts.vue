@@ -8,15 +8,32 @@ export default {
   name: 'AllPosts',
   data () {
     return {
-      posts: []
+      posts: [],
+      isErr: false,
     }
   },
   mounted() {
-    axios.get(`${BASE_URL}/posts`).then(res => {
+    if (localStorage.getItem('currentUserId')) {
+      axios.get(`${BASE_URL}/posts`).catch((error) => {
+        if (error.response) {
+          this.isErr = true;
+          console.log(error.response.status);
+        }
+      }).then(res => {
+      res.data.forEach(post => {
+      post.userId === Number(localStorage.getItem('currentUserId')) ? this.posts.push(post) : ''
+    })})
+    } else {
+      axios.get(`${BASE_URL}/posts`).catch((error) => {
+        if (error.response) {
+          this.isErr = true;
+          console.log(error.response.status);
+        }}).then(res => {
       res.data.forEach(post => {
       post.userId === store.state.currentUserId ? this.posts.push(post) : ''
     });
     })
+    }
   }
 } 
 
@@ -24,6 +41,7 @@ export default {
 
 <template>
   <section class="posts">
+    <div v-if="this.isErr" class="error">Sorry, we have an error. Please, try again later!</div>
     <div class="wrapper" v-for="(post, id) in this.posts" :key="id">
       <div class="post">
         <p class="title">{{ post.title }}</p>
@@ -54,5 +72,11 @@ export default {
   .body {
     font-size: 0.875rem;
     color: rgb(101, 101, 117);
+  }
+
+  @media screen and (max-width: 600px) {
+    .posts {
+      width: 20rem;
+    }
   }
 </style>
