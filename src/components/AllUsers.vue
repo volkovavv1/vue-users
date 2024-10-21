@@ -1,37 +1,42 @@
 <script>
-import axios from 'axios';
+import axios from "axios";
 
-import { BASE_URL } from '@/utils/constants';
+import { BASE_URL } from "@/utils/constants";
 
-import UserPreview from './UserPreview.vue';
+import UserPreview from "./UserPreview.vue";
 
 export default {
-  name: 'AllUsers',
+  name: "AllUsers",
   components: {
     UserPreview,
   },
-  data () {
+  data() {
     return {
       users: [],
       isErr: false,
-    }
+    };
   },
   mounted() {
-    axios.get(`${BASE_URL}/users`).catch((error) => {
+    axios
+      .get(`${BASE_URL}/users`)
+      .catch((error) => {
         if (error.response) {
           this.isErr = true;
           console.log(error.response.status);
-        }}).then(res => this.users = res.data)
-  }
-}
-
+        }
+      })
+      .then((res) => (this.users = res.data));
+  },
+};
 </script>
 
 <template>
   <section class="users-container">
     <h1>All users</h1>
-    <div v-if="this.isErr" class="error">Sorry, we have an error. Please, try again later!</div>
-    <UserPreview v-for="(user, id) in users" :key="id" :user="user"/>
+    <div v-if="this.isErr" class="error">
+      Sorry, we have an error. Please, try again later!
+    </div>
+    <UserPreview v-for="(user, id) in users" :key="id" :user="user" />
   </section>
 </template>
 
@@ -59,6 +64,5 @@ li {
 }
 
 @media screen and (max-width: 600px) {
-  
 }
 </style>

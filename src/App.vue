@@ -7,19 +7,17 @@
         </router-link>
       </header>
       <router-view />
-      <footer> 
-      <a href="https://github.com/volkovavv1">volkovavv1, 2024 </a>
-    </footer>
+      <footer>
+        <a href="https://github.com/volkovavv1">volkovavv1, 2024 </a>
+      </footer>
     </section>
   </main>
 </template>
 
 <script>
-
 export default {
-  name: 'App',
-}
-
+  name: "App",
+};
 </script>
 
 <style>
@@ -27,7 +25,7 @@ export default {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, sans-serif;
+  font-family: "Segoe UI", Tahoma, sans-serif;
   font-size: 20px;
 }
 
@@ -84,7 +82,7 @@ a {
 
 @media screen and (max-width: 900px) {
   * {
-  font-size: 14px;
-}
+    font-size: 14px;
+  }
 }
 </style>
